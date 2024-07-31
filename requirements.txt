@@ -1,5 +1,5 @@
 pyrofork
 tgcrypto
 aiohttp
-pyppeteer
+playwright
 loguru
