@@ -18,7 +18,9 @@ class VideoScraper:
         browser, page = await self._launch_browser()
 
         try:
-            await page.goto(f"https://xgroovy.com/search/{query}")
+            logger.info("Navigating to the URL")
+            await page.goto(f"https://xgroovy.com/search/{query}", timeout=30000)
+            logger.info("Waiting for selector")
             await page.wait_for_selector('.list-videos .item', timeout=15000)
 
             videos_data = await page.evaluate('''() => {
@@ -49,4 +51,5 @@ class VideoScraper:
             logger.error(f"An error occurred: {e}")
             return None
         finally:
-            await browser.close()
+            if not browser.is_closed():
+                await browser.close()
