@@ -28,7 +28,7 @@ RUN apt-get update && apt-get install -y \
     libwayland-server0 \
     libxshmfence1 \
     xdg-utils \
-    libx11-xcb1 \         # Added dependency
+    libx11-xcb1 \
     --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
