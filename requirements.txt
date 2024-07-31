@@ -2,3 +2,4 @@ pyrofork
 tgcrypto
 aiohttp
 pyppeteer
+loguru
