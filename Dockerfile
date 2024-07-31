@@ -1,41 +1,47 @@
 # Use the official Python image from the Docker Hub
 FROM python:3.11-slim
 
-# RUN apt-get update && apt-get install -y \
-#     wget \
-#     ca-certificates \
-#     libnss3 \
-#     libgbm-dev \
-#     libxkbcommon0 \
-#     libxcomposite1 \
-#     libxdamage1 \
-#     libxrandr2 \
-#     libxss1 \
-#     libxtst6 \
-#     libatk-bridge2.0-0 \
-#     libgtk-3-0 \
-#     libasound2 \
-#     fonts-liberation \
-#     --no-install-recommends \
-#     && rm -rf /var/lib/apt/lists/*
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-
-# Set the working directory in the container
+# Set the working directory
 WORKDIR /app
 
-# Copy the requirements.txt file into the container at /app
-COPY requirements.txt .
+# Install system dependencies required by Playwright
+RUN apt-get update && apt-get install -y \
+    libnss3 \
+    libatk-bridge2.0-0 \
+    libxkbcommon-x11-0 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxrandr2 \
+    libgbm1 \
+    libasound2 \
+    libpangocairo-1.0-0 \
+    libpango-1.0-0 \
+    libgtk-3-0 \
+    libatk1.0-0 \
+    libcups2 \
+    libdrm2 \
+    libwayland-client0 \
+    libwayland-server0 \
+    libxshmfence1 \
+    xdg-utils \
+    --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install the required packages
+# Copy the requirements file into the container
+COPY requirements.txt /app/
+
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application code into the container at /app
-COPY . .
+# Install Playwright and its dependencies
+RUN python -m playwright install
 
-# Set environment variables for the bot (replace these with your actual values)
-ENV API_ID=29920508
-ENV API_HASH=10676e77085a5214bcea5ca17cda5778
-ENV BOT_TOKEN=7004352885:AAFCjjO0qFVliIaEY1KF_bAqbiYKoPGeqJc
+# Copy the rest of the application code
+COPY . /app/
 
-# Command to run the application
-CMD ["python", "main.py"]
+# Run the bot
+CMD ["python", "bot.py"]
