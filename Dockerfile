@@ -1,6 +1,9 @@
 # Use the official Python image from the Docker Hub
 FROM python:3.11-slim
 
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 # Set the working directory
 WORKDIR /app
@@ -25,6 +28,7 @@ RUN apt-get update && apt-get install -y \
     libwayland-server0 \
     libxshmfence1 \
     xdg-utils \
+    libx11-xcb1 \         # Added dependency
     --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
