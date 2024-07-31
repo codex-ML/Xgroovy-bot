@@ -29,7 +29,7 @@ RUN apt-get update && apt-get install -y \
     libxshmfence1 \
     xdg-utils \
     libx11-xcb1 \
-    libgstreamer-1.0-0 \
+    libgstreamer1.0-0 \
     libatomic1 \
     libxslt1.1 \
     libwoff2-2 \
