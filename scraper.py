@@ -1,5 +1,5 @@
 import asyncio
-from pyppeteer import launch
+from playwright.async_api import async_playwright
 import json
 from loguru import logger
 
@@ -8,9 +8,10 @@ class VideoScraper:
         self.headless = headless
 
     async def _launch_browser(self):
-        browser = await launch(headless=self.headless)
-        page = await browser.newPage()
-        return browser, page
+        async with async_playwright() as p:
+            browser = await p.chromium.launch(headless=self.headless)
+            page = await browser.new_page()
+            return browser, page
 
     async def scrape_videos(self, query):
         logger.info(f"Starting video scrape with query: {query}")
@@ -18,7 +19,7 @@ class VideoScraper:
 
         try:
             await page.goto(f"https://xgroovy.com/search/{query}")
-            await page.waitForSelector('.list-videos .item', {'timeout': 15000})
+            await page.wait_for_selector('.list-videos .item', timeout=15000)
 
             videos_data = await page.evaluate('''() => {
                 const video_elements = document.querySelectorAll('.list-videos .item');
