@@ -29,6 +29,26 @@ RUN apt-get update && apt-get install -y \
     libxshmfence1 \
     xdg-utils \
     libx11-xcb1 \
+    libgstreamer-1.0-0 \
+    libatomic1 \
+    libxslt1.1 \
+    libwoff2-2 \
+    libvpx7 \
+    libevent-2.1-7 \
+    libopus0 \
+    libgstreamer-plugins-base1.0-0 \
+    libgstreamer-plugins-good1.0-0 \
+    libwebp6 \
+    libharfbuzz0b \
+    libenchant2-2 \
+    libsecret-1-0 \
+    libhyphen0 \
+    libmanette-0.2-0 \
+    libflite1 \
+    libpsl5 \
+    libnghttp2-14 \
+    libgles2 \
+    libx264-155 \
     --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
