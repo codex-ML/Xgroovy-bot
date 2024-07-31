@@ -32,13 +32,10 @@ RUN apt-get update && apt-get install -y \
     libgstreamer1.0-0 \
     libatomic1 \
     libxslt1.1 \
-    libwoff2-2 \
     libvpx7 \
     libevent-2.1-7 \
     libopus0 \
     libgstreamer-plugins-base1.0-0 \
-    libgstreamer-plugins-good1.0-0 \
-    libwebp6 \
     libharfbuzz0b \
     libenchant2-2 \
     libsecret-1-0 \
