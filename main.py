@@ -9,7 +9,7 @@ import json
 # Pyrogram configuration
 API_ID = 29920508
 API_HASH = "10676e77085a5214bcea5ca17cda5778"
-BOT_TOKEN = "7004352885:AAFCjjO0qFVliIaEY1KF_bAqbiYKoPGeqJc"
+BOT_TOKEN = "7228041236:AAEP9bnoUSsT_DYY7U6mCdyVBrMnakyaQRA"
 
 lodu = Client(":xgroovy_bot:", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 
