@@ -56,15 +56,3 @@ class VideoScraper:
                 await browser.close()
             except Exception as e:
                 logger.error(f"Failed to close the browser: {e}")
-
-# Example usage:
-async def main():
-    scraper = VideoScraper()
-    result = await scraper.scrape_videos("Russian")
-    if result:
-        print(result)
-    else:
-        print("Failed to scrape videos.")
-
-if __name__ == "__main__":
-    asyncio.run(main())
