@@ -1,3 +1,4 @@
 pyrofork
 tgcrypto
 aiohttp
+pyppeteer
