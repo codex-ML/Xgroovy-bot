@@ -51,5 +51,20 @@ class VideoScraper:
             logger.error(f"An error occurred: {e}")
             return None
         finally:
-            if not browser.is_closed():
+            # Ensure browser is closed in the finally block
+            try:
                 await browser.close()
+            except Exception as e:
+                logger.error(f"Failed to close the browser: {e}")
+
+# Example usage:
+async def main():
+    scraper = VideoScraper()
+    result = await scraper.scrape_videos("Russian")
+    if result:
+        print(result)
+    else:
+        print("Failed to scrape videos.")
+
+if __name__ == "__main__":
+    asyncio.run(main())
