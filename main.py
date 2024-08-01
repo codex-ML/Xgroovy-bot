@@ -57,20 +57,24 @@ async def download_video(client, callback_query: CallbackQuery):
     video_url = video_mapping.get(video_id)
 
     if video_url:
-        # Generate a download link (ensure it's a valid HTTPS URL)
-        download_link = await downloader.download_video(video_url)
-        if download_link:
-            # Use WebAppInfo to open the link
-            dl_keyboard = InlineKeyboardMarkup([
-                [InlineKeyboardButton("Watch Video", web_app=WebAppInfo(url=download_link))]
-            ])
-            await callback_query.message.edit_text(
-                text="Click the button to view the video:",
-                reply_markup=dl_keyboard
-            )
-            # await client.reply_video("Click the button to view the video",reply_markup=dl_keyboard)
-        else:
-            await callback_query.answer("Failed to get download link.", show_alert=True)
+        downloader = VideoDownloader()
+        try:
+            download_link = await downloader.download_video(video_url)
+            if download_link:
+                dl_keyboard = InlineKeyboardMarkup([
+                    [InlineKeyboardButton("Watch Video", web_app=WebAppInfo(url=download_link))]
+                ])
+                await callback_query.message.edit_text(
+                    text="Click the button to view the video:",
+                    reply_markup=dl_keyboard
+                )
+            else:
+                await callback_query.answer("Failed to get download link.", show_alert=True)
+        except Exception as e:
+            await callback_query.answer("An error occurred while processing the video.", show_alert=True)
+            logger.error(f"An error occurred while processing the video: {e}")
+        finally:
+            await downloader.close()
     else:
         await callback_query.answer("Invalid video ID.", show_alert=True)
 
