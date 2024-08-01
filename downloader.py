@@ -1,5 +1,5 @@
 import asyncio
-from playwright.async_api import async_playwright
+from pyppeteer import launch
 from loguru import logger
 
 class VideoDownloader:
@@ -7,10 +7,9 @@ class VideoDownloader:
         self.headless = headless
 
     async def _launch_browser(self):
-        async with async_playwright() as p:
-            browser = await p.chromium.launch(headless=self.headless)
-            page = await browser.new_page()
-            return browser, page
+        browser = await launch(headless=self.headless)
+        page = await browser.newPage()
+        return browser, page
 
     async def download_video(self, url):
         logger.info(f"Starting video download from: {url}")
@@ -18,7 +17,7 @@ class VideoDownloader:
 
         try:
             await page.goto(url)
-            await page.wait_for_selector('video', timeout=15000)
+            await page.waitForSelector('video', {'timeout': 15000})
             video_source_url = await page.evaluate('''() => {
                 const videoElement = document.querySelector('video');
                 return videoElement ? videoElement.src : null;
