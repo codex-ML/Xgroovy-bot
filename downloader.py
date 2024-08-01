@@ -14,48 +14,44 @@ class VideoDownloader:
         self.browser = await self.playwright.chromium.launch(headless=self.headless)
         self.page = await self.browser.new_page()
 
-    async def download_video(self, url):
+    async def download_video(self, url, retries=3):
         logger.info(f"Starting video download from: {url}")
         await self._launch_browser()
 
-        try:
-            await self.page.goto(url)
-            await self.page.wait_for_selector('video', timeout=15000)
-            video_source_url = await self.page.evaluate('''() => {
-                const videoElement = document.querySelector('video');
-                return videoElement ? videoElement.src : null;
-            }''')
+        attempt = 0
+        while attempt < retries:
+            try:
+                await self.page.goto(url, timeout=30000)
+                await self.page.wait_for_selector('video', timeout=30000)
+                video_source_url = await self.page.evaluate('''() => {
+                    const videoElement = document.querySelector('video');
+                    return videoElement ? videoElement.src : null;
+                }''')
 
-            if video_source_url:
-                await self.page.goto(video_source_url)
-                await asyncio.sleep(5)
-                current_url = self.page.url
-                logger.info(f"Video URL found: {current_url}")
-                return current_url
-            else:
-                logger.warning("No video element found on the page")
-                return None
-        except Exception as e:
-            logger.error(f"An error occurred: {e}")
-            return None
-        finally:
-            if self.browser:
-                await self.browser.close()
-            if self.playwright:
-                await self.playwright.stop()
+                if video_source_url:
+                    await self.page.goto(video_source_url, timeout=30000)
+                    await asyncio.sleep(5)
+                    current_url = self.page.url
+                    logger.info(f"Video URL found: {current_url}")
+                    return current_url
+                else:
+                    logger.warning("No video element found on the page")
+                    return None
+            except Exception as e:
+                logger.error(f"An error occurred: {e}")
+                attempt += 1
+                if attempt < retries:
+                    logger.info(f"Retrying ({attempt}/{retries})...")
+                    await asyncio.sleep(5)  # Backoff before retrying
+
+        logger.error("Failed to download video after multiple attempts.")
+        return None
 
     async def close(self):
         if self.browser:
-            await self.browser.close()
+            try:
+                await self.browser.close()
+            except Exception as close_exception:
+                logger.error(f"An error occurred while closing the browser: {close_exception}")
         if self.playwright:
             await self.playwright.stop()
-
-# Example usage:
-# async def main():
-#     downloader = VideoDownloader()
-#     url = "https://xgroovy.com/videos/78856/russian-harlot-gets-facial-after-rough-anal-amateur-porn"
-#     video_url = await downloader.download_video(url)
-#     print(f"Downloaded video URL: {video_url}")
-#     await downloader.close()
-
-# asyncio.run(main())
